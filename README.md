@@ -1,0 +1,1 @@
+In this lab, I will be learning how to code on the microcontroller, building drivers from scratch using the documentation provided. I will then be making a program to output a song using the clock on the mcu. 
