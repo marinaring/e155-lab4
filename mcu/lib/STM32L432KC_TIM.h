@@ -13,7 +13,8 @@
 #define __IO volatile
 
 // Base addresses
-#define TMI15_BASE (0x40021000UL) // base address of RCC
+#define TIM15_BASE (0x400143FFUL) // base address of TIM15
+#define TIM16_BASE (0x400147FFUL) // base address of TIM16
 
 // PLL
 #define PLLSRC_HSI 0
@@ -58,12 +59,13 @@ typedef struct
 } TIM_TypeDef;
 
 #define TIM15 ((TIM_TypeDef *) TIM15_BASE)
+#define TIM16 ((TIM_TypeDef *) TIM16_BASE)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function prototypes
 ///////////////////////////////////////////////////////////////////////////////
 
-void initTIM(TIM_TypeDef * TIM15);
-void delay_millis(TIM_TypeDef * TIM15, uint32_t ms);
+void initTIM(TIM_TypeDef * TIM, uint32_t prescaler);
+void delay_millis(TIM_TypeDef * TIM, uint32_t ms);
 
 #endif

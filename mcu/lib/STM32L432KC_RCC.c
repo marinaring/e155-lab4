@@ -7,41 +7,49 @@ void configurePLL() {
     // Set clock to 80 MHz
     // Output freq = (src_clk) * (N/M) / R
     // (4 MHz) * (N/M) / R = 80 MHz
-    // M: XX, N: XX, R: XX
+    // M: 4, N: 80, R: 1
     // Use MSI as PLLSRC
 
-    // TODO: Turn off PLL
-    RCC->PLLCFGR &= ~(1 << 24);
-
-    // TODO: Wait till PLL is unlocked (e.g., off)
+    // Turn off PLL
+    RCC->CR &= ~(1 << 24);
+    
+    // Wait till PLL is unlocked (e.g., off)
     while ((RCC->CR >> 25 & 1) != 0);
 
     // Load configuration
-    // TODO: Set PLL SRC to MSI
+    // Set PLL SRC to MSI
     RCC->PLLCFGR |= (1 << 0);
     RCC->PLLCFGR &= ~(1 << 1);
+    
+    // Set PLLN
+    RCC->PLLCFGR &= ~(0b11111111 << 8); // Clear all bits of PLLN
+    RCC->PLLCFGR |= (0b1010000 << 8); // |= 80
+    
+    // Set PLLM
+    RCC->PLLCFGR &= ~(0b111 << 4);  // Clear all bits
 
-    // TODO: Set PLLN
-    RCC->PLLCFGR &= ~(0b11111111 << 8); // remember to clear all of the bits first!
-    RCC->PLLCFGR |= (0b1010000 << 8);
-
-    // TODO: Set PLLM
-    RCC->PLLCGGR &= ~(0b111 << 4);
-    RCC->PLLCFGR |= (1 << 4);
-
-    // TODO: Set PLLR
+    // Set PLLR
     RCC->PLLCFGR &= ~(1 << 26);
-    RCC->PLLCFGR |= (0b100 << 25);
+    RCC->PLLCFGR |= (1 << 25);
+
+    // Set up clock for timers
+    // Set APB1, APB2 and AHB prescalers
+    RCC->CFGR &= ~(0b111 << 8); // PPRE1, APB1, Clear all bits
+    RCC->CFGR &= ~(0b1111 << 4); // HPRE, AHB, Clear all bits
+    RCC->CFGR &= ~(0b111 << 11); // PPRE2, APB2, Clear all bits
+
+    // Enable peripheral clocks
+    RCC->APB2ENR |= (1 << 17); // TIM16EN
+    RCC->APB2ENR |= (1 << 16); // TIM15EN
     
-    // TODO: Enable PLLR output
+    // Enable PLLR output
     RCC->PLLCFGR |= (1 << 24);
 
-    // TODO: Enable PLL
-    RCC->PLLCFGR |= (1 << 24);
+    // Enable PLL
+    RCC->CR |= (1 << 24);
     
-    // TODO: Wait until PLL is locked
+    // Wait until PLL is locked
     while ((RCC->CR >> 25 & 1) != 1);
-    
 }
 
 void configureClock(){

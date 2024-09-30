@@ -3,7 +3,7 @@
 
 #include "STM32L432KC_TIM.h"
 
-void initTIM() {
+void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     
     // do I need to wait for the CC1OF flag? Bit 0 of the status register (SR)
     // do I need to wait for the UIF flag? Bit 0 of the status register (SR)
@@ -11,9 +11,6 @@ void initTIM() {
     // CCR1 bits 15:0 capture/compare 1 value, the value that will be compared to the counter
     // PSC, bits 15:0 prescaler value, counter clock frequency (CK_CNT) is equal to f_CK_PSC/(PSC[15:0] + 1)
     // CCER, bit 0, 1: OC1 signal is output on the corresponding output pin 
-    // CCMR1, OC1M: 0011, toggle OC1REF when TIM_CNT  = TIM_CCR1
-    // 
-
     // OCxM bits in the TIMx_CCMR define output compare mode
     // CCxP bit in the TIMx_CCER defines output polarity
 
@@ -27,33 +24,48 @@ void initTIM() {
     // Write CCxE = 1 to enable the output
     // 5. Enable the counter by setting the CEN bit in the TIMx_CR1 register
 
-
-    // ?? should I disable the timer first
+    // main output disable
+    TIM->BDTR &= ~(1 << 15) // MOE, disable to prevent weird stuff while we change things
+    
+    // set prescaler value
+    TIM->PSC &= ~(0b1111111111111111 << 0); // PSC, reset all bits to 0
+    TIM->PSC |= (prescaler << 0); // PSC, set prescaler value equal to inputted parameter
 
     // disable slave mode by turning all slave mode bits to zero in SMCR
-    TIM15->SMCR &= ~(0b111 << 0); // 0, 1, 2
-    TIM15->SMCR &= ~(1 << 16); // 16
-
-    // LOCK level 3 has been programmed 
-    TIM15->BDTR
+    TIM->SMCR &= ~(0b111 << 0); // 0, 1, 2
+    TIM->SMCR &= ~(1 << 16); // 16
 
     // Make sure that the capture/compare channel is configured as an output
-    TIM15->CCMR1_OUTPUT &= ~(0b11 << 0); // set CC1S = '00'
+    TIM->CCMR1_OUTPUT &= ~(0b11 << 0); // CC1S = '00'
 
     // toggle output compare 1 mode
-    TIM15->CCMR1_OUTPUT &= ~(0b111 << 4); // reset bits 6:4
-    TIM15->CCMR1_OUTPUT &= ~(1 << 16); // reset bit 16
-    TIM15->CCMR1_OUTPUT |= (0b011 << 4); // set bits 6:4
+    TIM->CCMR1_OUTPUT &= ~(0b111 << 4); // reset bits 6:4
+    TIM->CCMR1_OUTPUT &= ~(1 << 16); // reset bit 16
+    TIM->CCMR1_OUTPUT |= (0b011 << 4); // set bits 6:4
 
     // disable preloaded register for comparison, we want to load in our own value
-    TIM15->CCMR1_OUTPUT &= ~(1 << 3); // bit 3, OC1PE
+    TIM->CCMR1_OUTPUT &= ~(1 << 3); // OC1PE
 
-    // Set output polarity
-    TIM15->CCER 
+    // select active high polarity
+    TIM->CCER |= (1 << 1); // CC1P
 
+    // set off-state selection for idle and run mode
+    TIM->BDTR &= (1 << 11); // OSSR, run
+    TIM->BDTR &= (1 << 10); // OSSI, idle
+
+    // set output idle state
+    TIM->CR2 &= (1 << 9); // OIS1N
+    TIM->CR2 &= (1 << 8); // OIS1
+
+    // enable capture/compare 1 output
+    TIM->CCER |= (1 << 0); // CC1E
+    TIM->CCER |= (1 << 2); // CC1NE (complementary output enable)
+    // the OC1N signal depends on MOE, OSSI, OSSR, OIS1, OIS1N, CC1E
     
-    // enable counter by setting bit 0 (CEN) to 1
-    TIM15->CR1 |= (1 << 0);
-    
+    // enable counter
+    TIM->CR1 |= (1 << 0); // CEN
+
+    // main output enable
+    TIM->BDTR |= (1 << 15) // MOE, set to 1 to enable OC and OCN outputs
 }
 
