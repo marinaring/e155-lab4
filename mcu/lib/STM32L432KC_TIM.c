@@ -30,7 +30,7 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     // set prescaler value
     TIM->PSC &= ~(0b1111111111111111 << 0); // PSC, reset all bits to 0
     TIM->PSC |= (prescaler << 0); // PSC, set prescaler value equal to inputted parameter
-
+    
     // disable slave mode by turning all slave mode bits to zero in SMCR
     TIM->SMCR &= ~(0b111 << 0); // 0, 1, 2
     TIM->SMCR &= ~(1 << 16); // 16
@@ -43,8 +43,8 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     TIM->CCMR1_OUTPUT &= ~(1 << 16); // reset bit 16
     TIM->CCMR1_OUTPUT |= (0b011 << 4); // set bits 6:4
 
-    // disable preloaded register for comparison, we want to load in our own value
-    TIM->CCMR1_OUTPUT &= ~(1 << 3); // OC1PE
+    // enable preloaded register for comparison, we want to be able to change on update event
+    TIM->CCMR1_OUTPUT |= (1 << 3); // OC1PE
 
     // select active high polarity
     TIM->CCER |= (1 << 1); // CC1P
@@ -69,3 +69,22 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     TIM->BDTR |= (1 << 15) // MOE, set to 1 to enable OC and OCN outputs
 }
 
+
+void delay_millis(TIM_TypeDef * TIM, uint32_t ms) {
+    
+    // based on a prescaler value of 19999, it takes 4 clock cycles to get to 1 ms
+    // we can calculate arbritrary time in milliseconds using the number of clock cycles in 1 ms
+    uint32_t clock_cycles_ms = 4;
+    uint32_t clock_cycles_delay = 4 * ms;
+
+    // the counter is compared to CCR1
+    // we need to set it to the appropriate number of milliseconds
+    TIM->CCR1 &= ~(0b1111111111111111 << 0); // reset all bits
+    TIM->CCR1 |= (clock_cycles_delay << 0); // set to calculated value
+
+    // the counter resets once it reaches the auto reload value.
+    // set auto reload value to appropriate number of milliseconds
+    TIM->ARR &= ~(0b1111111111111111 << 0); // reset all bits
+    TIM->ARR |= (clock_cycles_delay << 0); // set to calculated value
+
+}
