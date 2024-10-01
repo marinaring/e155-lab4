@@ -6,9 +6,6 @@
 #include <stdio.h>
 
 void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
-    
-    // main output disable
-    TIM->BDTR &= ~(1 << 15); // MOE, disable to prevent weird stuff while we change things
 
     // disable slave mode by turning all slave mode bits to zero in SMCR
     TIM->SMCR &= ~(0b111 << 0); // 0, 1, 2
@@ -24,6 +21,9 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     // Make sure that the capture/compare channel is configured as an output
     TIM->CCMR1_OUTPUT &= ~(0b11 << 0); // CC1S = '00'
 
+    // OCxPE
+    TIM->CCMR1_OUTPUT |= (1 << 3);
+
     // PWM output compare 1 mode
     // active when CNT < CCMR1 and inactive otherwise
     TIM->CCMR1_OUTPUT &= ~(0b111 << 4); // reset bits 6:4
@@ -38,7 +38,6 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     TIM->CCER |= (1 << 0); // CC1E
     TIM->CCER |= (1 << 2); // CC1NE (complementary output enable)
     TIM->CCER |= (1 << 1); // CC1P, active high polarity
-    // the OC1N signal depends on MOE, OSSI, OSSR, OIS1, OIS1N, CC1E
     
     // generate update in order to reinitialize the counter
     // we don't want the counter to start at some unknown value
