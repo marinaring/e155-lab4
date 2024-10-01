@@ -10,7 +10,7 @@
 #include "../lib/STM32L432KC_GPIO.h"
 #include <math.h>
 
-#define SONG_PIN 3
+#define SONG_PIN 6
 
 // Fur Elise, E155 Lab 4
 // Pitch in Hz, duration in ms
@@ -154,7 +154,7 @@ int main(void) {
     initTIM(TIM15, PRESCALER_DELAY); // rest delay timer
 
     // Configure pin for frequency output
-    pinMode(GPIOA, 6, GPIO_ALT);
+    pinMode(GPIOA, SONG_PIN, GPIO_ALT);
 
     // TIM16 can be connected to PA6 by setting AF14
     GPIOA->AFRL &= ~(0b1111 << 4*SONG_PIN); // reset all bits in corresponding GPIOA
