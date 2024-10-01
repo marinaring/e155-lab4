@@ -5,9 +5,9 @@
 // 9/30/24
 
 // TODO: Add #includes
-#include "STM32L432KC_TIM.h"
-#include "STM32L432KC_RCC.h"
-#include "STM32L432KC_GPIO.h"
+#include "../lib/STM32L432KC_TIM.h"
+#include "../lib/STM32L432KC_RCC.h"
+#include "../lib/STM32L432KC_GPIO.h"
 #include <math.h>
 
 #define SONG_PIN 3
@@ -125,34 +125,42 @@ const int notes[][2] = {
 {440,	500},
 {  0,	0}};
 
-int main(void) {
+const int test_notes[][2] = {
+{220, 3000},
+{0, 1000},
+{1000, 3000},
+{0, 1000},
+{220, 3000}
+};
 
-    // Configure Flash
-    configureFlash();
+int main(void) {
 
     // Configure clock
     configureClock();
 
     // Configure timers 
-    initTIM(TIM15, PRESCALER_SOUND); // song frequency timer
-    initTIM(TIM16, PRESCALER_DELAY); // rest delay timer
+    initTIM(TIM16, PRESCALER_SOUND); // song frequency timer
+    initTIM(TIM15, PRESCALER_DELAY); // rest delay timer
 
     // Configure pin for frequency output
+    pinMode(GPIOA, 6, GPIO_ALT);
+
     // TIM16 can be connected to PA6 by setting AF14
     GPIOA->AFRL &= ~(0b1111 << 4*SONG_PIN); // reset all bits in corresponding GPIOA
-    GPIOA->AFRL |= (0b1110 << 4*SONG_PIN); // set corresponding GPIOA to AF14 
-    pinMode(GPIOA, SONG_PIN, GPIO_OUTPUT); // set pin mode to output
+    GPIOA->AFRL |= (0b1110 << 4*SONG_PIN); // set corresponding GPIOA for TIM16 (PA6) to AF14 
+    
 
+    set_frequency(TIM16, 220);
     // play music
-    for (size_t i = 0; i < (sizeof(notes)/(2*sizeof(int))); i++) {
+    //for (int i = 0; i < (sizeof(test_notes)/(2*sizeof(int))); i++) {
         
-        // get frequency and rest length
-        int frequency = notes[i][0];
-        int delay = notes[i][1];
+    //    // get frequency and rest length
+    //    int frequency = test_notes[i][0];
+    //    int delay = test_notes[i][1];
 
-        set_frequency(TIM15, frequency); // set frequency so right note is being played
-        delay_millis(TIM16, delay); // wait appropriate duration
-    }
+    //    set_frequency(TIM16, frequency); // set frequency so right note is being played
+    //    delay_millis(TIM15, delay); // wait appropriate duration
+    //}
 
     // keep it in this loop until system reset so that it doesn't keep cycling through
     while(1);

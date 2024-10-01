@@ -65,6 +65,6 @@ typedef struct
 
 void initTIM(TIM_TypeDef * TIM, uint32_t prescaler);
 void delay_millis(TIM_TypeDef * TIM, uint32_t ms);
-void set_frequency(TIM_TypeDef * TIM, uint32_t freq)
+void set_frequency(TIM_TypeDef * TIM, uint32_t freq);
 
 #endif

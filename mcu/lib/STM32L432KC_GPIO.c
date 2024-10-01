@@ -3,7 +3,7 @@
 
 #include "STM32L432KC_GPIO.h"
 
-void pinMode(GPIO * GPIO, int pin, int function) {
+void pinMode(GPIO_TypeDef * GPIO, int pin, int function) {
     switch(function) {
         case GPIO_INPUT:
             GPIO->MODER &= ~(0b11 << 2*pin);
@@ -22,15 +22,15 @@ void pinMode(GPIO * GPIO, int pin, int function) {
     }
 }
 
-int digitalRead(GPIO * GPIO, int pin) {
+int digitalRead(GPIO_TypeDef * GPIO, int pin) {
     return ((GPIO->IDR) >> pin) & 1;
 }
 
-void digitalWrite(GPIO * GPIO, int pin, int val) {
+void digitalWrite(GPIO_TypeDef * GPIO, int pin, int val) {
     GPIO->ODR |= (1 << pin);
 }
 
-void togglePin(GPIO * GPIO, int pin) {
+void togglePin(GPIO_TypeDef * GPIO, int pin) {
     // Use XOR to toggle
     GPIO->ODR ^= (1 << pin);
 }

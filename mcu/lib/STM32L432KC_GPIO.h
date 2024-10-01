@@ -43,22 +43,22 @@ typedef struct {
     volatile uint32_t LCKR;    // GPIO Offset 0x1C
     volatile uint32_t AFRL;    // GPIO Offset 0x20
     volatile uint32_t AFRH;    // GPIO Offset 0x24
-} GPIO;
+} GPIO_TypeDef;
 
 // Pointers to GPIO-sized chunks of memory for each peripheral
-#define GPIOB ((GPIO *) GPIOB_BASE)
-#define GPIOA ((GPIO *) GPIOA_BASE)
+#define GPIOB ((GPIO_TypeDef *) GPIOB_BASE)
+#define GPIOA ((GPIO_TypeDef *) GPIOA_BASE)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function prototypes
 ///////////////////////////////////////////////////////////////////////////////
 
-void pinMode(GPIO * GPIO, int function);
+void pinMode(GPIO_TypeDef * GPIO, int pin, int function);
 
-int digitalRead(GPIO * GPIO, int pin);
+int digitalRead(GPIO_TypeDef * GPIO, int pin);
 
-void digitalWrite(GPIO * GPIO, int pin, int val);
+void digitalWrite(GPIO_TypeDef * GPIO, int pin, int val);
 
-void togglePin(GPIO * GPIO, int pin);
+void togglePin(GPIO_TypeDef * GPIO, int pin);
 
 #endif
