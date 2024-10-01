@@ -31,16 +31,6 @@ void configurePLL() {
     // Set PLLR
     RCC->PLLCFGR &= ~(1 << 26);
     RCC->PLLCFGR |= (1 << 25);
-
-    // Set up clock for timers
-    // Set APB1, APB2 and AHB prescalers
-    RCC->CFGR &= ~(0b111 << 8); // PPRE1, APB1, Clear all bits
-    RCC->CFGR &= ~(0b1111 << 4); // HPRE, AHB, Clear all bits
-    RCC->CFGR &= ~(0b111 << 11); // PPRE2, APB2, Clear all bits
-
-    // Enable peripheral clocks
-    RCC->APB2ENR |= (1 << 17); // TIM16EN
-    RCC->APB2ENR |= (1 << 16); // TIM15EN
     
     // Enable PLLR output
     RCC->PLLCFGR |= (1 << 24);

@@ -33,13 +33,11 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
 
     // enable preloaded register for comparison, we want to be able to change on update event
     TIM->CCMR1_OUTPUT |= (1 << 3); // OC1PE
-
-    // select active high polarity
-    TIM->CCER |= (1 << 1); // CC1P
-
+    
     // enable capture/compare 1 output
     TIM->CCER |= (1 << 0); // CC1E
     TIM->CCER |= (1 << 2); // CC1NE (complementary output enable)
+    TIM->CCER |= (1 << 1); // CC1P, active high polarity
     // the OC1N signal depends on MOE, OSSI, OSSR, OIS1, OIS1N, CC1E
     
     // generate update in order to reinitialize the counter
@@ -47,6 +45,7 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     TIM->EGR |= (1 << 0); // UG, set bit 0
 
     // enable counter
+    TIM->CR1 |= (1 << 7); // enable use of shadow registers
     TIM->CR1 |= (1 << 0); // CEN
 
     // main output enable
