@@ -10,6 +10,9 @@
 // Definitions
 ///////////////////////////////////////////////////////////////////////////////
 
+// Pins we will be using
+#define SONG_PIN    2
+
 // Values for GPIO pins ("val" arguments)
 #define GPIO_LOW    0
 #define GPIO_HIGH   1

@@ -6,6 +6,8 @@
 
 // TODO: Add #includes
 #include "STM32L432KC_TIM.h"
+#include "STM32L432KC_RCC.h"
+#include "STM32L432KC_GPIO.h"
 #include <math.h>
 
 #define SONG_PIN 3
@@ -131,38 +133,24 @@ int main(void) {
     // Configure clock
     configureClock();
 
-    // Configure timers (declare)
-    initTIM(TIM15, 999); // song frequency timer
-    initTIM(TIM16, 19999); // rest delay timer
+    // Configure timers 
+    initTIM(TIM15, PRESCALER_SOUND); // song frequency timer
+    initTIM(TIM16, PRESCALER_DELAY); // rest delay timer
 
-    // Turn on clock to GPIOB
-    RCC->AHB2ENR |= (1 << 1);
-
-    // Set LED_PIN as output
-    pinMode(SONG_PIN, GPIO_OUTPUT);
+    // Configure pin for frequency output
+    GPIOA->AFRL &= ~(0b1111 << 0); // reset all bits
+    GPIOA->AFRL |= (1110 << 8); // set GPIOA Pin 2 to AF14 
+    pinMode(GPIOA, SONG_PIN, GPIO_OUTPUT); // set pin mode to output
 
     // play music
     for (size_t i = 0; i < (sizeof(notes)/(2*sizeof(int))); i++) {
         
         // get frequency and rest length
         int frequency = notes[i][0];
-        int rest = notes[i][1];
+        int delay = notes[i][1];
 
-        // if frequency is zero, then don't play anything
-        if (frequency == 0) {
-            TIM15->
-
-        }
-        else {
-            // calculate number of clock cycles for auto reload and CCRN
-            int
-
-            // set auto reload and CCRN
-
-            // delay appropriate amount
-        }
-
-        
+        set_frequency(TIM15, frequency); // set frequency so right note is being played
+        delay_millis(TIM16, delay); // wait appropriate duration
     }
 
     return 0;

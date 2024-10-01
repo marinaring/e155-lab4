@@ -111,22 +111,34 @@ void delay_millis(TIM_TypeDef * TIM, uint32_t ms) {
 
 void set_frequency(TIM_TypeDef * TIM, uint32_t freq) {
     
-    // calculate number of clock cycles it takes to output desired frequency
-    uint32_t clock_cycles_freq = round((CLOCK_SPEED * 10**6)/(freq * (PRESCALER_SOUND + 1)));
+    // if frequency is zero, then don't play anything
+    if (freq == 0) {
+        // disable counter so that nothing happens
+        TIM->CR1 &= ~(1 << 0); // CEN
+    }
+    else {    
+        // calculate number of clock cycles it takes to output desired frequency
+        uint32_t clock_cycles = round((CLOCK_SPEED * 10**6)/(freq * (PRESCALER_SOUND + 1)));
+        // calculate when to switch off based on duty cycle
+        uint32_t toggle_point = round(clock_cycles * DUTY_CYCLE);
 
-    // the counter is compared to CCR1
-    // we need to set it to the appropriate number of milliseconds
-    TIM->CCR1 &= ~(0b1111111111111111 << 0); // reset all bits
-    TIM->CCR1 |= (clock_cycles_freq << 0); // set to calculated value
+        // the counter is compared to CCR1
+        // we switch the signal off when it reaches the toggle point
+        TIM->CCR1 &= ~(0b1111111111111111 << 0); // reset all bits
+        TIM->CCR1 |= (toggle_point << 0); // set to calculated value
 
-    // the counter resets once it reaches the auto reload value.
-    // set auto reload value to appropriate number of milliseconds
-    TIM->ARR &= ~(0b1111111111111111 << 0); // reset all bits
-    TIM->ARR |= (clock_cycles_freq << 0); // set to calculated value
+        // the counter resets once it reaches the auto reload value.
+        // we turn the signal back on when it reaches the auto reload value
+        TIM->ARR &= ~(0b1111111111111111 << 0); // reset all bits
+        TIM->ARR |= (clock_cycles << 0); // set to calculated value
 
-    // generate update in order to reinitialize the counter
-    // we don't want the counter to start at some unknown value
-    TIM->EGR |= (1 << 0); // UG, set bit 0
+        // generate update in order to reinitialize the counter
+        // we don't want the counter to start at some unknown value
+        TIM->EGR |= (1 << 0); // UG, set bit 0
+
+        // make sure counter is enabled
+        TIM->CR1 |= (1 << 0); // CEN
+    }
 
     return;
 }
