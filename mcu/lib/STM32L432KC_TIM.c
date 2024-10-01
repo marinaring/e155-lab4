@@ -24,10 +24,12 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     // Make sure that the capture/compare channel is configured as an output
     TIM->CCMR1_OUTPUT &= ~(0b11 << 0); // CC1S = '00'
 
-    // toggle output compare 1 mode
+    // PWM output compare 1 mode
+    // active when CNT < CCMR1 and inactive otherwise
     TIM->CCMR1_OUTPUT &= ~(0b111 << 4); // reset bits 6:4
     TIM->CCMR1_OUTPUT &= ~(1 << 16); // reset bit 16
-    TIM->CCMR1_OUTPUT |= (0b011 << 4); // set bits 6:4
+    TIM->CCMR1_OUTPUT |= (0b100 << 4); // set bits 6:4
+    TIM->CCMR1_OUTPUT |= (0b1 << 16); // set bit 16
 
     // enable preloaded register for comparison, we want to be able to change on update event
     TIM->CCMR1_OUTPUT |= (1 << 3); // OC1PE
