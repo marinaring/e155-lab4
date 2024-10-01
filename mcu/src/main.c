@@ -138,10 +138,6 @@ int main(void) {
     // Configure clock
     configureClock();
 
-    // Configure timers 
-    initTIM(TIM16, PRESCALER_SOUND); // song frequency timer
-    initTIM(TIM15, PRESCALER_DELAY); // rest delay timer
-
      // Set up clock for timers
     // Set APB1, APB2 and AHB prescalers
     RCC->CFGR &= ~(0b111 << 8); // PPRE1, APB1, Clear all bits
@@ -151,7 +147,11 @@ int main(void) {
     // Enable peripheral clocks
     RCC->APB2ENR |= (1 << 17); // TIM16EN
     RCC->APB2ENR |= (1 << 16); // TIM15EN
-    RCC->AHB2ENR |= (1 << 0); // GPIOA enable
+    RCC->AHB2ENR |= (1 << 0); // GPIOA
+
+    // Configure timers 
+    initTIM(TIM16, PRESCALER_SOUND); // song frequency timer
+    initTIM(TIM15, PRESCALER_DELAY); // rest delay timer
 
     // Configure pin for frequency output
     pinMode(GPIOA, 6, GPIO_ALT);

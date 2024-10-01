@@ -8,8 +8,8 @@
 void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
 
     // disable slave mode by turning all slave mode bits to zero in SMCR
-    TIM->SMCR &= ~(0b111 << 0); // 0, 1, 2
-    TIM->SMCR &= ~(1 << 16); // 16
+    //TIM->SMCR &= ~(0b111 << 0); // 0, 1, 2
+    //TIM->SMCR &= ~(1 << 16); // 16
 
     // set prescaler value
     TIM->PSC &= ~(0b1111111111111111 << 0); // PSC, reset all bits to 0
@@ -28,8 +28,8 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     // active when CNT < CCMR1 and inactive otherwise
     TIM->CCMR1_OUTPUT &= ~(0b111 << 4); // reset bits 6:4
     TIM->CCMR1_OUTPUT &= ~(1 << 16); // reset bit 16
-    TIM->CCMR1_OUTPUT |= (0b100 << 4); // set bits 6:4
-    TIM->CCMR1_OUTPUT |= (0b1 << 16); // set bit 16
+    TIM->CCMR1_OUTPUT |= (0b110 << 4); // set bits 6:4
+    //TIM->CCMR1_OUTPUT |= (0b1 << 16); // set bit 16
 
     // enable preloaded register for comparison, we want to be able to change on update event
     TIM->CCMR1_OUTPUT |= (1 << 3); // OC1PE
@@ -39,6 +39,9 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     TIM->CCER |= (1 << 2); // CC1NE (complementary output enable)
     TIM->CCER |= (1 << 1); // CC1P, active high polarity
     
+    // main output enable
+    TIM->BDTR |= (1 << 15); // MOE, set to 1 to enable OC and OCN outputs
+
     // generate update in order to reinitialize the counter
     // we don't want the counter to start at some unknown value
     TIM->EGR |= (1 << 0); // UG, set bit 0
@@ -46,9 +49,6 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     // enable counter
     TIM->CR1 |= (1 << 7); // enable use of shadow registers
     TIM->CR1 |= (1 << 0); // CEN
-
-    // main output enable
-    TIM->BDTR |= (1 << 15); // MOE, set to 1 to enable OC and OCN outputs
 }
 
 
