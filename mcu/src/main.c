@@ -138,8 +138,9 @@ int main(void) {
     initTIM(TIM16, PRESCALER_DELAY); // rest delay timer
 
     // Configure pin for frequency output
-    GPIOA->AFRL &= ~(0b1111 << 0); // reset all bits
-    GPIOA->AFRL |= (1110 << 8); // set GPIOA Pin 2 to AF14 
+    // TIM16 can be connected to PA6 by setting AF14
+    GPIOA->AFRL &= ~(0b1111 << 4*SONG_PIN); // reset all bits in corresponding GPIOA
+    GPIOA->AFRL |= (0b1110 << 4*SONG_PIN); // set corresponding GPIOA to AF14 
     pinMode(GPIOA, SONG_PIN, GPIO_OUTPUT); // set pin mode to output
 
     // play music
@@ -152,6 +153,9 @@ int main(void) {
         set_frequency(TIM15, frequency); // set frequency so right note is being played
         delay_millis(TIM16, delay); // wait appropriate duration
     }
+
+    // keep it in this loop until system reset so that it doesn't keep cycling through
+    while(1);
 
     return 0;
 }

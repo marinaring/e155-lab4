@@ -11,7 +11,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // Pins we will be using
-#define SONG_PIN    2
+#define SONG_PIN    6
 
 // Values for GPIO pins ("val" arguments)
 #define GPIO_LOW    0
