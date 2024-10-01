@@ -9,21 +9,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Definitions
 ///////////////////////////////////////////////////////////////////////////////
-
 #define __IO volatile
 
 // Base addresses
-#define TIM15_BASE (0x400143FFUL) // base address of TIM15
-#define TIM16_BASE (0x400147FFUL) // base address of TIM16
-
-// PLL
-#define PLLSRC_HSI 0
-#define PLLSRC_HSE 1
+#define TIM15_BASE (0x40014000UL) // base address of TIM15
+#define TIM16_BASE (0x40014400UL) // base address of TIM16
 
 // Clock configuration
-#define SW_HSI  0
-#define SW_HSE  1
-#define SW_PLL  2
+#define CLOCK_SPEED 80 // Clock speed in MHz
+#define PRESCALER_DELAY 1999 // The prescaler used for the delay timer
+#define PRESCALER_SOUND 999 // The prescaler used for the sound frequency timer
+
+// Timer configuration
+#define DUTY_CYCLE 0.5 // duty cycle for the sounds we play
 
 /**
   * @brief Reset and Clock Control
