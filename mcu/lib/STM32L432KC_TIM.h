@@ -5,6 +5,8 @@
 #define STM32L4_TIM15_H
 
 #include <stdint.h>
+#include <math.h>
+#include <stdio.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Definitions
@@ -35,8 +37,8 @@ typedef struct
   __IO uint32_t DIER;           /*!< TIM15 DMA/interrupt enable register,                       Address offset: 0x0C */
   __IO uint32_t SR;             /*!< TIM15 status register,                                     Address offset: 0x10 */
   __IO uint32_t EGR;            /*!< TIM15 event generation register,                           Address offset: 0x14 */
-  __IO uint32_t CCMR1_OUTPUT;   /*!< TIM15 capture/compare mode register 1, output mode,        Address offset: 0x18 */
-  __IO uint32_t CCMR1_INPUT;    /*!< TIM15 capture/compare mode register 1, input mode,         Address offset: 0x1C */
+  __IO uint32_t CCMR1;   /*!< TIM15 capture/compare mode register 1, output mode,        Address offset: 0x18 */
+  uint32_t      RESERVED0;    /*!< TIM15 capture/compare mode register 1, input mode,         Address offset: 0x1C */
   __IO uint32_t CCER;           /*!< TIM15 capture/compare enable register,                     Address offset: 0x20 */
   __IO uint32_t CNT;            /*!< TIM15 counter,                                             Address offset: 0x24 */
   __IO uint32_t PSC;            /*!< TIM15 prescaler,                                           Address offset: 0x28 */

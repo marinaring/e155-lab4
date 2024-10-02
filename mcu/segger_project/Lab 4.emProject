@@ -60,6 +60,8 @@
     <folder Name="Source Files">
       <configuration Name="Common" filter="c;cpp;cxx;cc;h;s;asm;inc" />
       <file file_name="../src/main.c" />
+      <file file_name="../lib/STM32L432KC_FLASH.c" />
+      <file file_name="../lib/STM32L432KC_FLASH.h" />
       <file file_name="../lib/STM32L432KC_GPIO.c" />
       <file file_name="../lib/STM32L432KC_GPIO.h" />
       <file file_name="../lib/STM32L432KC_RCC.c" />

@@ -2,45 +2,41 @@
 // Source code for TIM functions
 
 #include "STM32L432KC_TIM.h"
-#include <math.h>
-#include <stdio.h>
 
 void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
 
     // disable slave mode by turning all slave mode bits to zero in SMCR
-    //TIM->SMCR &= ~(0b111 << 0); // 0, 1, 2
-    //TIM->SMCR &= ~(1 << 16); // 16
+    TIM->SMCR &= ~(0b111 << 0); // 0, 1, 2
+    TIM->SMCR &= ~(1 << 16); // 16
+
+    // main output enable
+    TIM->BDTR |= (1 << 15); // MOE, set to 1 to enable OC and OCN outputs
 
     // set prescaler value
-    TIM->PSC &= ~(0b1111111111111111 << 0); // PSC, reset all bits to 0
-    TIM->PSC |= (prescaler << 0); // PSC, set prescaler value equal to inputted parameter
+    TIM->PSC = 0; // PSC, reset all bits to 0
+    TIM->PSC = prescaler; // PSC, set prescaler value equal to inputted parameter
 
     // reset auto reload
-    TIM->ARR &= ~(0b1111111111111111 << 0); // reset all bits
+    TIM->ARR = 0; // reset all bits
 
     // Make sure that the capture/compare channel is configured as an output
-    TIM->CCMR1_OUTPUT &= ~(0b11 << 0); // CC1S = '00'
+    TIM->CCMR1 &= ~(0b11 << 0); // CC1S = '00'
 
-    // OCxPE
-    TIM->CCMR1_OUTPUT |= (1 << 3);
+    // enable preloaded register for comparison, we want to be able to change on update event
+    TIM->CCMR1 |= (1 << 3); // OC1PE
 
     // PWM output compare 1 mode
     // active when CNT < CCMR1 and inactive otherwise
-    TIM->CCMR1_OUTPUT &= ~(0b111 << 4); // reset bits 6:4
-    TIM->CCMR1_OUTPUT &= ~(1 << 16); // reset bit 16
-    TIM->CCMR1_OUTPUT |= (0b110 << 4); // set bits 6:4
-    //TIM->CCMR1_OUTPUT |= (0b1 << 16); // set bit 16
+    TIM->CCMR1 &= ~(0b111 << 4); // reset bits 6:4
+    TIM->CCMR1 &= ~(1 << 16); // reset bit 16
+    TIM->CCMR1 |= (1 << 4); // set bit 5
+    TIM->CCMR1 |= (1 << 6); // set bit 6
 
-    // enable preloaded register for comparison, we want to be able to change on update event
-    TIM->CCMR1_OUTPUT |= (1 << 3); // OC1PE
-    
     // enable capture/compare 1 output
     TIM->CCER |= (1 << 0); // CC1E
     TIM->CCER |= (1 << 2); // CC1NE (complementary output enable)
-    TIM->CCER |= (1 << 1); // CC1P, active high polarity
-    
-    // main output enable
-    TIM->BDTR |= (1 << 15); // MOE, set to 1 to enable OC and OCN outputs
+    //TIM->CCER |= (1 << 1); // CC1P, active low polarity
+  
 
     // generate update in order to reinitialize the counter
     // we don't want the counter to start at some unknown value
@@ -98,12 +94,12 @@ void set_frequency(TIM_TypeDef * TIM, uint32_t freq) {
         // the counter is compared to CCR1
         // we switch the signal off when it reaches the toggle point
         TIM->CCR1 &= ~(0b1111111111111111 << 0); // reset all bits
-        TIM->CCR1 |= (toggle_point << 0); // set to calculated value
+        TIM->CCR1 = toggle_point; // set to calculated value
 
         // the counter resets once it reaches the auto reload value.
         // we turn the signal back on when it reaches the auto reload value
         TIM->ARR &= ~(0b1111111111111111 << 0); // reset all bits
-        TIM->ARR |= (clock_cycles << 0); // set to calculated value
+        TIM->ARR = clock_cycles; // set to calculated value
 
         // generate update in order to reinitialize the counter
         // we don't want the counter to start at some unknown value
