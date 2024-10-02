@@ -125,6 +125,10 @@ const int notes[][2] = {
 {440,	500},
 {  0,	0}};
 
+const int late_night_talking[][2] = {
+  // C
+};
+
 const int test_notes[][2] = {
 {220, 3000},
 {0, 1000},
@@ -164,17 +168,17 @@ int main(void) {
     GPIOA->OSPEEDR |= (0b11 << 2*SONG_PIN); // set speed to very fast
     
 
-    set_frequency(TIM16, 220);
+    //set_frequency(TIM16, 220);
     // play music
-    //for (int i = 0; i < (sizeof(test_notes)/(2*sizeof(int))); i++) {
+    for (int i = 0; i < (sizeof(notes)/(2*sizeof(int))); i++) {
         
-    //    // get frequency and rest length
-    //    int frequency = test_notes[i][0];
-    //    int delay = test_notes[i][1];
+        // get frequency and rest length
+        int frequency = notes[i][0];
+        int delay = notes[i][1];
 
-    //    set_frequency(TIM16, frequency); // set frequency so right note is being played
-    //    delay_millis(TIM15, delay); // wait appropriate duration
-    //}
+        set_frequency(TIM16, frequency); // set frequency so right note is being played
+        delay_millis(TIM15, delay); // wait appropriate duration
+    }
 
     // keep it in this loop until system reset so that it doesn't keep cycling through
     while(1);

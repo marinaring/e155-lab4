@@ -49,11 +49,10 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
 void delay_millis(TIM_TypeDef * TIM, uint32_t ms) {
     
     // calculate number of clock cycles it takes to get to 1 ms
-    // based on a prescaler value of 19999, it takes 4 clock cycles to get to 1 ms
     // we can calculate arbritrary time in milliseconds using the number of clock cycles in 1 ms
     
     uint32_t clock_cycles_ms = round((CLOCK_SPEED * 0.001 * pow(10, 6))/(PRESCALER_DELAY + 1));
-    uint32_t clock_cycles_delay = 4 * ms;
+    uint32_t clock_cycles_delay = clock_cycles_ms * ms;
 
     // the counter is compared to CCR1
     // we need to set it to the appropriate number of milliseconds
