@@ -29,21 +29,19 @@ void initTIM(TIM_TypeDef * TIM, uint32_t prescaler) {
     // active when CNT < CCMR1 and inactive otherwise
     TIM->CCMR1 &= ~(0b111 << 4); // reset bits 6:4
     TIM->CCMR1 &= ~(1 << 16); // reset bit 16
-    TIM->CCMR1 |= (1 << 4); // set bit 5
+    TIM->CCMR1 |= (1 << 5); // set bit 5
     TIM->CCMR1 |= (1 << 6); // set bit 6
 
     // enable capture/compare 1 output
     TIM->CCER |= (1 << 0); // CC1E
     TIM->CCER |= (1 << 2); // CC1NE (complementary output enable)
     //TIM->CCER |= (1 << 1); // CC1P, active low polarity
-  
 
     // generate update in order to reinitialize the counter
-    // we don't want the counter to start at some unknown value
     TIM->EGR |= (1 << 0); // UG, set bit 0
 
     // enable counter
-    TIM->CR1 |= (1 << 7); // enable use of shadow registers
+    TIM->CR1 |= (1 << 7); // ARPE, enable use of shadow registers
     TIM->CR1 |= (1 << 0); // CEN
 }
 

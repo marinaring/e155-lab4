@@ -20,7 +20,7 @@
 // Clock configuration
 #define CLOCK_SPEED 80 // Clock speed in MHz
 #define PRESCALER_DELAY 1999 // The prescaler used for the delay timer
-#define PRESCALER_SOUND 999 // The prescaler used for the sound frequency timer
+#define PRESCALER_SOUND 699 // The prescaler used for the sound frequency timer
 
 // Timer configuration
 #define DUTY_CYCLE 0.5 // duty cycle for the sounds we play

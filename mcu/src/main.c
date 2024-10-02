@@ -152,8 +152,8 @@ int main(void) {
     RCC->CFGR &= ~(0b111 << 11); // PPRE2, APB2, Clear all bits
 
     // Configure timers 
-    initTIM(TIM16, 1999); // song frequency timer
-    initTIM(TIM15, 999); // rest delay timer
+    initTIM(TIM16, PRESCALER_SOUND); // song frequency timer
+    initTIM(TIM15, PRESCALER_DELAY); // rest delay timer
 
     // Configure pin for frequency output
     pinMode(GPIOA, SONG_PIN, GPIO_ALT);
@@ -161,6 +161,7 @@ int main(void) {
     // TIM16 can be connected to PA6 by setting AF14
     GPIOA->AFRL &= ~(0b1111 << 4*SONG_PIN); // reset all bits in corresponding GPIOA
     GPIOA->AFRL |= (0b1110 << 4*SONG_PIN); // set corresponding GPIOA for TIM16 (PA6) to AF14 
+    GPIOA->OSPEEDR |= (0b11 << 2*SONG_PIN); // set speed to very fast
     
 
     set_frequency(TIM16, 220);
