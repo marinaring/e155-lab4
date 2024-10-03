@@ -125,8 +125,43 @@ const int notes[][2] = {
 {440,	500},
 {  0,	0}};
 
-const int late_night_talking[][2] = {
-  // C
+const float september[][2] = {
+  {370.0, 0.0625}, // F4#, eighth
+  {440, 0.0625},   // A4, eighth
+  {493.9, 0.0625}, // B4, eighth
+  {554.4, 0.0625}, // C5#, eighth
+  {554.4, 0.0625}, // C5#, 1/8 + 1/4
+  {0, 0.1875},     // rest, 1/8 + 1/4
+  {370.0, 0.0625}, // F4#, eighth
+  {554.4, 0.0625}, // C5#, eighth
+  {659.2, 0.0625}, // E5, eighth
+  {740.9, 0.0625}, // F5#, eighth
+  {493.9, 0.0625}, // B4, eighth
+  {440, 0.125},    // A4, quarter
+  {370.0, 0.0625}, // F4#, eighth
+  {554.4, 0.1875}, // C5#, 1/8 + 1/4
+  {0, 500},        // rest, whole
+  {440, 0.0625},   // A4, eighth
+  {493.9, 0.0625}, // B4, eighth
+  {554.4, 0.0625}, // C5# eighth
+  {659.2, 0.0625}, // E5 eighth
+  {740.9, 0.0625}, // F5# eighth
+  {493.9, 0.0625}, // B4, eighth
+  {440, 0.125},    // A4, quarter
+  {370.0, 0.0625}, // F4#, eighth
+  {554.4, 0.1875}, // C5#, 1/8 + 1/4
+  {0, 0.5},        // rest, whole
+  {440, 0.0625},   // A4, eighth
+  {493.9, 0.0625}, // B4, eighth
+  {554.4, 0.0625}, // C5#, eighth
+  {659.2, 0.0625}, // E5, eighth
+  {740.9, 0.0625}, // F5#, eighth
+  {493.9, 0.03125}, // B4, sixteenth
+  {554.4, 0.03125}, // C5#, sixteenth,
+  {493.9, 0.125},    // B4, quarter
+  {440, 0.0625},   // A4, eight
+  {493.9, 0.0625}, // B4, eight, 
+  {440, 1}        // A4, whole, whole
 };
 
 const int test_notes[][2] = {
@@ -170,11 +205,11 @@ int main(void) {
 
     //set_frequency(TIM16, 220);
     // play music
-    for (int i = 0; i < (sizeof(notes)/(2*sizeof(int))); i++) {
+    for (int i = 0; i < (sizeof(september)/(2*sizeof(float))); i++) {
         
         // get frequency and rest length
-        int frequency = notes[i][0];
-        int delay = notes[i][1];
+        float frequency = september[i][0];
+        int delay = september[i][1];
 
         set_frequency(TIM16, frequency); // set frequency so right note is being played
         delay_millis(TIM15, delay); // wait appropriate duration

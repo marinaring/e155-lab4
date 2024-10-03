@@ -54,6 +54,9 @@ void delay_millis(TIM_TypeDef * TIM, uint32_t ms) {
     uint32_t clock_cycles_ms = round((CLOCK_SPEED * 0.001 * pow(10, 6))/(PRESCALER_DELAY + 1));
     uint32_t clock_cycles_delay = clock_cycles_ms * ms;
 
+    // disable counter
+    TIM->CR1 &= ~(1 << 0); // CEN
+
     // the counter is compared to CCR1
     // we need to set it to the appropriate number of milliseconds
     TIM->CCR1 &= ~(0b1111111111111111 << 0); // reset all bits
@@ -68,8 +71,13 @@ void delay_millis(TIM_TypeDef * TIM, uint32_t ms) {
     // we don't want the counter to start at some unknown value
     TIM->EGR |= (1 << 0); // UG, set bit 0
 
+    // enable counter
+    TIM->CR1 |= (1 << 0); // CEN
+    
     // now we need to wait until we reach CNT = CCRN, this triggers bit 1 of the status register
     while((TIM->SR >> 1 & 1) == 0);
+
+    TIM->SR &= ~(1 << 1);
 
     return;
 }
