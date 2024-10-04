@@ -123,45 +123,85 @@ const int notes[][2] = {
 {523,	125},
 {494,	125},
 {440,	500},
-{  0,	0}};
+{  0,	1000}};
 
 const float september[][2] = {
-  {370.0, 0.0625}, // F4#, eighth
-  {440, 0.0625},   // A4, eighth
-  {493.9, 0.0625}, // B4, eighth
-  {554.4, 0.0625}, // C5#, eighth
-  {554.4, 0.0625}, // C5#, 1/8 + 1/4
-  {0, 0.1875},     // rest, 1/8 + 1/4
-  {370.0, 0.0625}, // F4#, eighth
-  {554.4, 0.0625}, // C5#, eighth
-  {659.2, 0.0625}, // E5, eighth
-  {740.9, 0.0625}, // F5#, eighth
-  {493.9, 0.0625}, // B4, eighth
-  {440, 0.125},    // A4, quarter
-  {370.0, 0.0625}, // F4#, eighth
-  {554.4, 0.1875}, // C5#, 1/8 + 1/4
-  {0, 500},        // rest, whole
-  {440, 0.0625},   // A4, eighth
-  {493.9, 0.0625}, // B4, eighth
-  {554.4, 0.0625}, // C5# eighth
-  {659.2, 0.0625}, // E5 eighth
-  {740.9, 0.0625}, // F5# eighth
-  {493.9, 0.0625}, // B4, eighth
-  {440, 0.125},    // A4, quarter
-  {370.0, 0.0625}, // F4#, eighth
-  {554.4, 0.1875}, // C5#, 1/8 + 1/4
-  {0, 0.5},        // rest, whole
-  {440, 0.0625},   // A4, eighth
-  {493.9, 0.0625}, // B4, eighth
-  {554.4, 0.0625}, // C5#, eighth
-  {659.2, 0.0625}, // E5, eighth
-  {740.9, 0.0625}, // F5#, eighth
-  {493.9, 0.03125}, // B4, sixteenth
-  {554.4, 0.03125}, // C5#, sixteenth,
-  {493.9, 0.125},    // B4, quarter
-  {440, 0.0625},   // A4, eight
-  {493.9, 0.0625}, // B4, eight, 
-  {440, 1}        // A4, whole, whole
+  {370.0, 250}, // F4#, eighth
+  {440,   250},   // A4, eighth
+  {493.9, 250}, // B4, eighth
+  {554.4, 250}, // C5#, eighth
+  {554.4, 750}, // C5#, 1/8 + 1/4
+  {0,     750},     // rest, 1/8 + 1/4
+  {370.0, 250}, // F4#, eighth
+  {554.4, 250}, // C5#, eighth
+  {659.2, 250}, // E5, eighth
+  {740.9, 250}, // F5#, eighth
+  {493.9, 250}, // B4, eighth
+  {440,   500},    // A4, quarter
+  {370.0, 250}, // F4#, eighth
+  {554.4, 750}, // C5#, 1/8 + 1/4
+  {0,     2000},        // rest, whole
+  {440,   250},   // A4, eighth
+  {493.9, 250}, // B4, eighth
+  {554.4, 250}, // C5# eighth
+  {659.2, 250}, // E5 eighth
+  {740.9, 250}, // F5# eighth
+  {493.9, 250}, // B4, eighth
+  {440,   500},    // A4, quarter
+  {370.0, 250}, // F4#, eighth
+  {554.4, 750}, // C5#, 1/8 + 1/4
+  {0,     2000},        // rest, whole
+  {440,   250},   // A4, eighth
+  {493.9, 250}, // B4, eighth
+  {554.4, 250}, // C5#, eighth
+  {659.2, 250}, // E5, eighth
+  {740.9, 250}, // F5#, eighth
+  {493.9, 125}, // B4, sixteenth
+  {554.4, 125}, // C5#, sixteenth,
+  {493.9, 500},    // B4, quarter
+  {440,   250},   // A4, eight
+  {493.9, 250}, // B4, eight, 
+  {440,   4000},        // A4, whole, whole
+  {0,     2000},        // rest, whole
+  {370.0, 750}, // F4#, 
+  {440,   500},   // A4, 
+  {493.9, 500}, // B4, 
+  {0,     250},
+  {554.4, 500}, // C5#, eighth
+  {587.3, 250},
+  {554.4, 750},
+  {0,     500},
+  {554.4, 250}, // C5#, eighth
+  {587.3, 250},
+  {554.4, 250},
+  {493.9, 250}, // B4, eighth
+  {440,   500},    // A4, quarter
+  {493.9, 250}, // B4, eighth
+  {0, 250},
+  {554.4, 500}, // C5#, eighth
+  {587.3, 250},
+  {554.4, 750},
+  {0,     500},
+  {554.4, 250}, // C5#, eighth
+  {587.3, 250},
+  {554.4, 250},
+  {493.9, 250}, // B4, eighth
+  {440,   500},    // A4, quarter
+  {493.9, 250}, // B4, eighth
+  {0, 250},
+  {554.4, 500}, // C5#, eighth
+  {587.3, 250},
+  {554.4, 750},
+  {0,     500},
+  {554.4, 250}, // C5#, eighth
+  {587.3, 250},
+  {554.4, 250},
+  {493.9, 250}, // B4, eighth
+  {440,   500},    // A4, quarter
+  {370.0, 250}, // F4#,
+  {493.9, 250}, // B4, eighth
+  {440,   4000},    // A4, quarter
+  {0, 1000}
 };
 
 const int test_notes[][2] = {
@@ -203,13 +243,22 @@ int main(void) {
     GPIOA->OSPEEDR |= (0b11 << 2*SONG_PIN); // set speed to very fast
     
 
-    //set_frequency(TIM16, 220);
-    // play music
+    // play music - Fur Elise
+    for (int i = 0; i < (sizeof(notes)/(2*sizeof(int))); i++) {
+        
+        // get frequency and rest length
+        float frequency = notes[i][0];
+        float delay = notes[i][1];
+
+        set_frequency(TIM16, frequency); // set frequency so right note is being played
+        delay_millis(TIM15, delay); // wait appropriate duration
+    }
+
     for (int i = 0; i < (sizeof(september)/(2*sizeof(float))); i++) {
         
         // get frequency and rest length
         float frequency = september[i][0];
-        int delay = september[i][1];
+        float delay = september[i][1];
 
         set_frequency(TIM16, frequency); // set frequency so right note is being played
         delay_millis(TIM15, delay); // wait appropriate duration
